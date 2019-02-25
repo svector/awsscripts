@@ -2,6 +2,7 @@ import urllib, json
 import requests # 'pip install requests'
 from boto.sts import STSConnection # AWS SDK for Python (Boto) 'pip install boto'
 import os
+import sys
 
 
 # Step 3: Format resulting temporary credentials into JSON
@@ -10,7 +11,7 @@ json_string_with_temp_credentials += '"sessionId":"' + os.environ['AWS_ACCESS_KE
 json_string_with_temp_credentials += '"sessionKey":"' + os.environ['AWS_SECRET_ACCESS_KEY'] + '",'
 json_string_with_temp_credentials += '"sessionToken":"' + os.environ['AWS_SESSION_TOKEN'] + '"'
 json_string_with_temp_credentials += '}'
-
+sys.stderr.write(json_string_with_temp_credentials)
 # Step 4. Make request to AWS federation endpoint to get sign-in token. Construct the parameter string with
 # the sign-in action request, a 12-hour session duration, and the JSON document with temporary credentials 
 # as parameters.
@@ -19,6 +20,8 @@ request_parameters += "&SessionDuration=43200"
 request_parameters += "&Session=" + urllib.parse.quote_plus(json_string_with_temp_credentials)
 request_url = "https://signin.aws.amazon.com/federation" + request_parameters
 r = requests.get(request_url)
+
+
 # Returns a JSON document with a single element named SigninToken.
 signin_token = json.loads(r.text)
 
