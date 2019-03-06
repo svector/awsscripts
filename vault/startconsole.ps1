@@ -14,4 +14,4 @@ if ($null -eq $dir)
 
 $userDataDir = "--user-data-dir="+$profileFolder
 
-Start-Process chrome.exe -ArgumentList @( "-incognito", $userDataDir,$loginUrl )
+Start-Process chrome.exe -ArgumentList @( $userDataDir,$loginUrl )
